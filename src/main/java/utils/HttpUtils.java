@@ -1,14 +1,12 @@
 package utils;
 import com.google.gson.Gson;
 import dtos.*;
-import org.glassfish.jersey.internal.guava.Ticker;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,6 +74,47 @@ public class HttpUtils {
         CombinedDTO combinedDTO = new CombinedDTO(combinedTicker, jokes);
 
         return combinedDTO;
+    }
+
+    public static List<CryptoCombinedDTO> fetchcryptos(List<CryptoValutaDTO> cvdto) throws IOException, ExecutionException, InterruptedException {
+        ExecutorService es = Executors.newCachedThreadPool();
+        List<HelperMethods> hm = new ArrayList<>();
+        List<HelperKraken> hk = new ArrayList<>();
+
+        for(CryptoValutaDTO cvdto2 : cvdto){
+            for(LinksDTO ldto : cvdto2.getLinkList()){
+                if(ldto.getExchange().equals("yobit")){
+                    hm.add(new HelperMethods(es.submit(
+                        () -> gson.fromJson(HttpUtils.fetchData("https://yobit.net/api/2/" + ldto.getLink() + "/ticker"), Map.class)), ldto.getExchange(), cvdto2.getId()));
+
+                } else if(ldto.getExchange().equals("kraken")){
+                    hk.add(new HelperKraken(es.submit(
+                        () -> gson.fromJson(HttpUtils.fetchData("https://api.kraken.com/0/public/Ticker?pair="+ldto.getLink()), Map.class)), ldto.getExchange(), cvdto2.getId()));
+
+                }
+            }
+        }
+        List<CryptoCombinedDTO> combined = new ArrayList<>();
+       for(HelperMethods help : hm){
+           for (Map helpmap : help.getYobit().get().values()) {
+               String yobitprice = gson.toJson(helpmap);
+               YobitDTO yobitdto = gson.fromJson(yobitprice, YobitDTO.class);
+               combined.add(new CryptoCombinedDTO(help.getName(), help.getExchange(), yobitdto.getSell()));
+
+           }
+       }
+        for(HelperKraken crack : hk){
+            for(Map crackmap : crack.getKraken().get().get("result").values()) {
+                String krakenprice = gson.toJson(crackmap);
+                KrakenDTO krakendto = gson.fromJson(krakenprice, KrakenDTO.class);
+                combined.add(new CryptoCombinedDTO(crack.getName(), crack.getExchange(), krakendto.getA().get(0)));
+            }
+        }
+
+
+
+        System.out.println(gson.toJson(combined));
+       return combined;
     }
 
     public static JokeDTO fetchJoke() throws IOException {
