@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import dtos.RoleDTO;
 import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
@@ -57,8 +59,13 @@ public class User implements Serializable {
 
   public User(String userName, String userPass) {
     this.userName = userName;
-
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());;
+  }
+
+  public User(String userName, String userPass, List<Role> role) {
+    this.userName = userName;
+    this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());;
+    this.roleList = role;
   }
 
 

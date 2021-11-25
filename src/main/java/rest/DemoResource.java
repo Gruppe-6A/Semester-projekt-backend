@@ -1,19 +1,22 @@
 package rest;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dtos.UserDTO;
 import entities.User;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Produces;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
+import facades.UserFacade;
+import security.errorhandling.AuthenticationException;
 import utils.EMF_Creator;
 
 /**
@@ -23,6 +26,8 @@ import utils.EMF_Creator;
 public class DemoResource {
     
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
+    private static final UserFacade FACADE =  UserFacade.getUserFacade(EMF);
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     @Context
     private UriInfo context;
 
@@ -67,5 +72,14 @@ public class DemoResource {
     public String getFromAdmin() {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
+    }
+
+    @POST
+    @Consumes("application/json")
+    @Produces("application/json")
+    public String createPerson(String user) throws AuthenticationException {
+        UserDTO udto = GSON.fromJson(user, UserDTO.class);
+        UserDTO newudto = FACADE.createUser(udto);
+        return GSON.toJson(newudto);
     }
 }
