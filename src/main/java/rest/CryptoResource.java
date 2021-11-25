@@ -1,9 +1,13 @@
 package rest;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import facades.CryptoFacade;
+import utils.EMF_Creator;
 import utils.HttpUtils;
 
 import javax.annotation.security.RolesAllowed;
+import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,13 +20,16 @@ import java.util.concurrent.ExecutionException;
 
 @Path("crypto")
 public class CryptoResource {
+    private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
+
+    private static final CryptoFacade FACADE =  CryptoFacade.getCryptoFacade(EMF);
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     @Context
     private UriInfo context;
 
     @Context
     SecurityContext securityContext;
-
-    Gson gson = new Gson();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -47,5 +54,10 @@ public class CryptoResource {
         return gson.toJson(HttpUtils.combinedEnds());
     }
 
-
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/momsasødepigenfrabyen")
+    public String getCryptoList() throws IOException, ExecutionException, InterruptedException {
+        return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
+    }
 }
