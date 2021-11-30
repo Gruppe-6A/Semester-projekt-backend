@@ -1,5 +1,7 @@
 package entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +11,10 @@ import java.util.List;
 public class CryptoValuta {
     @Id
     @Column(name = "id", nullable = false)
+    @Expose
     private String id;
     @OneToMany(mappedBy = "cryptoValuta", cascade = CascadeType.PERSIST)
+    @Expose
     private List<Links> linksList = new ArrayList<Links>();
 
     public CryptoValuta(String id) {
@@ -18,6 +22,9 @@ public class CryptoValuta {
     }
     public CryptoValuta() {
     }
+
+
+
     public void addLink(Links link){
         linksList.add(link);
     }

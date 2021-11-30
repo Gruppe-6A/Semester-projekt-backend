@@ -1,5 +1,7 @@
 package entities;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 @Table(name = "links")
@@ -10,8 +12,11 @@ public class Links {
     @Column(name = "id", nullable = false)
     private Integer id;
     @ManyToOne(cascade = CascadeType.PERSIST)
+
     private CryptoValuta cryptoValuta;
+    @Expose
     private String link;
+    @Expose
     private String exchange;
 
     public Links(CryptoValuta cryptoValuta, String link, String exchange) {

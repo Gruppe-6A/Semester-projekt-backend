@@ -5,6 +5,8 @@
  */
 package facades;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dtos.RenameMeDTO;
 import entities.CryptoValuta;
 import entities.Links;
@@ -20,8 +22,9 @@ import utils.EMF_Creator;
  */
 public class Populator {
     public static void populate(){
-        EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+       // EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
+        // EntityManager em = emf.createEntityManager();
         CryptoValuta Bitcoin = new CryptoValuta("bitcoin");
         CryptoValuta Ethereum = new CryptoValuta("ethereum");
         Links btcKraken = new Links(Bitcoin, "BTCUSD", "kraken");
@@ -32,11 +35,14 @@ public class Populator {
         Ethereum.addLink(ethYobit);
         Bitcoin.addLink(btcKraken);
         Bitcoin.addLink(btcYobit);
-        em.getTransaction().begin();
+
+       /* em.getTransaction().begin();
         em.persist(Bitcoin);
         em.persist(Ethereum);
         em.getTransaction().commit();
         em.close();
+
+        */
 
     }
     

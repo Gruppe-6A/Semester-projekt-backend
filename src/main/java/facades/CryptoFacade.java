@@ -2,10 +2,12 @@ package facades;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.CrypDTO;
 import dtos.CryptoCombinedDTO;
 import dtos.CryptoValutaDTO;
 import dtos.LinksDTO;
 import entities.CryptoValuta;
+import entities.Links;
 import utils.EMF_Creator;
 import utils.HttpUtils;
 
@@ -13,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.core.Link;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -47,12 +50,25 @@ public class CryptoFacade {
 
         return CryptoValutaDTO.getCryptoValutaDTO(cl);
     }
+    public void addCrypto(CryptoValutaDTO cvDTO){
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        CryptoValuta cryptoValuta = new CryptoValuta(cvDTO.getId());
+        for(LinksDTO linksdto : cvDTO.getLinkList()){
+            cryptoValuta.addLink(new Links(cryptoValuta, linksdto.getLink(), linksdto.getExchange()));
+        }
+        em.persist(cryptoValuta);
+        em.getTransaction().commit();
+        em.close();
+    }
+
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
         emf = EMF_Creator.createEntityManagerFactory();
         CryptoFacade cf = getCryptoFacade(emf);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(gson.toJson(HttpUtils.fetchcryptos(cf.getCryptoFromDB())));
+
 
     }
 
