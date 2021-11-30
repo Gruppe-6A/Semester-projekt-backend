@@ -1,9 +1,14 @@
 package facades;
 
+import dtos.UserDTO;
+import entities.Role;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import security.errorhandling.AuthenticationException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lam@cphbusiness.dk
@@ -41,6 +46,23 @@ public class UserFacade {
             em.close();
         }
         return user;
+    }
+
+    public UserDTO createUser(UserDTO userdto) throws AuthenticationException {
+        EntityManager em = emf.createEntityManager();
+        List<Role> role = new ArrayList<>();
+        Role userRole = new Role("user");
+        role.add(userRole);
+        User user =  new User(userdto.getUserName(), userdto.getUserPass(), role);
+
+        try {
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new UserDTO(user);
     }
 
 }
