@@ -2,20 +2,22 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.UserCryptoList;
+import entities.UserCrypto;
 import facades.CryptoFacade;
 import utils.EMF_Creator;
 import utils.HttpUtils;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Path("crypto")
@@ -59,5 +61,14 @@ public class CryptoResource {
     @Path("/momsasødepigenfrabyen")
     public String getCryptoList() throws IOException, ExecutionException, InterruptedException {
         return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
+    }
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/portfolio")
+    public String addToPortfolio(String string){
+        UserCryptoList userCryptoList = gson.fromJson(string, UserCryptoList.class);
+        FACADE.addToPortfolio(userCryptoList);
+        return "Sejt gået knejt! Det er derfor du er min yndlings :) <3";
     }
 }

@@ -47,6 +47,13 @@ public class UserFacade {
         }
         return user;
     }
+    public User getUser(String username){
+        EntityManager em = emf.createEntityManager();
+        User user;
+        user = em.find(User.class, username);
+        return user;
+    }
+
 
     public UserDTO createUser(UserDTO userdto) throws AuthenticationException {
         EntityManager em = emf.createEntityManager();

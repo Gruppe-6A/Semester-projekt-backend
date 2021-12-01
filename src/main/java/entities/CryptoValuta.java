@@ -14,7 +14,7 @@ public class CryptoValuta {
     @Expose
     private String id;
     @OneToMany(mappedBy = "cryptoValuta", cascade = CascadeType.PERSIST)
-    @Expose
+
     private List<Links> linksList = new ArrayList<Links>();
 
     public CryptoValuta(String id) {

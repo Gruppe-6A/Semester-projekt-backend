@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.google.gson.annotations.Expose;
 import dtos.RoleDTO;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -26,6 +27,7 @@ public class User implements Serializable {
   @Basic(optional = false)
   @NotNull
   @Column(name = "user_name", length = 25)
+  @Expose
   private String userName;
   @Basic(optional = false)
   @NotNull
@@ -66,6 +68,9 @@ public class User implements Serializable {
     this.userName = userName;
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());;
     this.roleList = role;
+  }
+  public User(String userName){
+    this.userName = userName;
   }
 
 

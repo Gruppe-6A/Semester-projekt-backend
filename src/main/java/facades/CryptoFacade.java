@@ -2,12 +2,11 @@ package facades;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dtos.CrypDTO;
-import dtos.CryptoCombinedDTO;
-import dtos.CryptoValutaDTO;
-import dtos.LinksDTO;
+import dtos.*;
 import entities.CryptoValuta;
 import entities.Links;
+import entities.User;
+import entities.UserCrypto;
 import utils.EMF_Creator;
 import utils.HttpUtils;
 
@@ -26,6 +25,7 @@ public class CryptoFacade {
 
     private CryptoFacade() {
     }
+
      Gson gson = new GsonBuilder().setPrettyPrinting().create();
     /**
      *
@@ -61,6 +61,21 @@ public class CryptoFacade {
         em.getTransaction().commit();
         em.close();
     }
+    public void addToPortfolio(UserCryptoList userCryptoList){
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+
+        for(UserCryptoDTO userCrypto : userCryptoList.getUserCryptoDTOList()){
+                User user = new User(userCrypto.getUserDTO().getUserName());
+                CryptoValuta cryptoValuta = new CryptoValuta(userCrypto.getCryptoValutaDTO().getId());
+                UserCrypto userCrypto1 = new UserCrypto(user, cryptoValuta, userCrypto.getCount());
+                em.persist(userCrypto1);
+        }
+
+        em.getTransaction().commit();
+        em.close();
+    }
+
 
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {

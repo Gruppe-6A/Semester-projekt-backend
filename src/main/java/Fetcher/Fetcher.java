@@ -26,6 +26,7 @@ public class Fetcher {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+
         Map <String, Map<String, String>>larshansen = gson.fromJson(HttpUtils.fetchData("https://yobit.net/api/2/btc_usdt/ticker"), Map.class);
 
         YobitDTO frederikke = null;
