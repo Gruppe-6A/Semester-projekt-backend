@@ -5,6 +5,8 @@ import entities.Role;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+
 import security.errorhandling.AuthenticationException;
 
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ public class UserFacade {
         user = em.find(User.class, username);
         return user;
     }
+
 
 
     public UserDTO createUser(UserDTO userdto) throws AuthenticationException {

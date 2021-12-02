@@ -16,6 +16,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Link;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -74,6 +75,22 @@ public class CryptoFacade {
 
         em.getTransaction().commit();
         em.close();
+    }
+
+    public List<UserCryptoDTO> showPortfolio(String userName){
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            TypedQuery query = em.createQuery("Select u from UserCrypto u where u.user.userName = :username", UserCrypto.class);
+            query.setParameter("username", userName);
+            List<UserCrypto> uc = query.getResultList();
+            //System.out.println(uc.get(0).getCryptoValuta());
+            em.getTransaction().commit();
+            return UserCryptoDTO.getUserCryptoDTO(uc);
+        }
+        finally {
+            em.close();
+        }
     }
 
 

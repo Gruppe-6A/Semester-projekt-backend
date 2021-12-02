@@ -75,4 +75,5 @@ public class UserFacadeTest {
         assertEquals("John", facade.createUser(John1).getUserName());
     }
 
+
 }

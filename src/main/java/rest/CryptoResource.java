@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.UserCryptoDTO;
 import dtos.UserCryptoList;
 import entities.UserCrypto;
 import facades.CryptoFacade;
@@ -70,5 +71,12 @@ public class CryptoResource {
         UserCryptoList userCryptoList = gson.fromJson(string, UserCryptoList.class);
         FACADE.addToPortfolio(userCryptoList);
         return "Sejt gået knejt! Det er derfor du er min yndlings :) <3";
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/portfolio/{username}")
+    public String getPortfolio(@PathParam("username") String username) throws IOException, ExecutionException, InterruptedException {
+        return gson.toJson(FACADE.showPortfolio(username));
     }
 }

@@ -67,6 +67,15 @@ public class DemoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("username")
+    @RolesAllowed("user")
+    public String getUsername() {
+        String thisuser = securityContext.getUserPrincipal().getName();
+        return thisuser ;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("admin")
     @RolesAllowed("admin")
     public String getFromAdmin() {
