@@ -59,7 +59,7 @@ public class CryptoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/momsasødepigenfrabyen")
+    @Path("/cryptoList")
     public String getCryptoList() throws IOException, ExecutionException, InterruptedException {
         return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
     }
@@ -70,7 +70,7 @@ public class CryptoResource {
     public String addToPortfolio(String string){
         UserCryptoList userCryptoList = gson.fromJson(string, UserCryptoList.class);
         FACADE.addToPortfolio(userCryptoList);
-        return "Sejt gået knejt! Det er derfor du er min yndlings :) <3";
+        return "The coin has successfully been added to your portfolio";
     }
 
     @GET

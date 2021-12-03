@@ -85,7 +85,7 @@ public class CryptoFacade {
             query.setParameter("username", userName);
             List<UserCrypto> uc = query.getResultList();
             //System.out.println(uc.get(0).getCryptoValuta());
-            em.getTransaction().commit();
+             em.getTransaction().commit();
             return UserCryptoDTO.getUserCryptoDTO(uc);
         }
         finally {
