@@ -8,6 +8,7 @@ import entities.UserCrypto;
 import facades.CryptoFacade;
 import utils.EMF_Creator;
 import utils.HttpUtils;
+import utils.TimedEvent;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
@@ -80,5 +81,12 @@ public class CryptoResource {
     public String getPortfolio(@PathParam("username") String username) throws IOException, ExecutionException, InterruptedException {
 
         return gson.toJson(FACADE.showPortfolio(username));
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/very")
+    public String startTimedEvent(){
+        TimedEvent.imnotsure();
+        return "deez nuts";
     }
 }
