@@ -52,11 +52,9 @@ public class CryptoFacade extends Applet {
     public List<CryptoValutaDTO> getCryptoByName(String id){
         EntityManager em = getEntityManager();
         try {
-            em.getTransaction().begin();
             TypedQuery query = em.createQuery("Select c from CryptoValuta c where c.id= :id", CryptoValuta.class);
             query.setParameter("id", id);
             List<CryptoValuta> cv = query.getResultList();
-            em.getTransaction().commit();
             return CryptoValutaDTO.getCryptoValutaDTO(cv);
         } finally {
             em.close();
