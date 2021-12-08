@@ -130,7 +130,7 @@ public class CryptoEndpointTest {
                 .statusCode(200)
                 .body("tickers.from", hasItems("BTC", "ETH", "DOGE", "LTC", "XRP"));
     }
-    
+
      */
 
 

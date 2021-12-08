@@ -61,8 +61,8 @@ public class CryptoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/cryptoList")
     public String getCryptoList() throws IOException, ExecutionException, InterruptedException {
-        return "[{{name: \"Suck\", exchange: \"on\", price: \"deez\"}}]";
-        //return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
+
+        return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
     }
     @POST
     @Produces(MediaType.APPLICATION_JSON)
