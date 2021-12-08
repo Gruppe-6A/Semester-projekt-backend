@@ -79,7 +79,6 @@ public class CryptoResource {
     @Path("/portfolio/{username}")
     public String getPortfolio(@PathParam("username") String username) throws IOException, ExecutionException, InterruptedException {
 
-        return "{\"userCryptoDTOList\":[{\"userDTO\":{\"userName\":\"String\"},\"cryptoValutaDTO\":{\"id\":\"Haha, held og lykke med at fixe lortet nu :3\"},\"count\": 69}]}";
-        //return gson.toJson(FACADE.showPortfolio(username));
+        return gson.toJson(FACADE.showPortfolio(username));
     }
 }
