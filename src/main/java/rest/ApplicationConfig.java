@@ -1,7 +1,5 @@
 package rest;
 
-import utils.TimedEvent;
-
 import java.util.Set;
 import javax.ws.rs.core.Application;
 

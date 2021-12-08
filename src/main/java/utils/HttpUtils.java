@@ -113,7 +113,7 @@ public class HttpUtils {
 
 
 
-
+        System.out.println(gson.toJson(combined));
        return combined;
     }
 

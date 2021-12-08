@@ -118,7 +118,7 @@ public class CryptoEndpointTest {
 
 
 
-    /*@Test
+    @Test
     public void testCryptoAll() {
         login("user", "test");
         given()
@@ -130,8 +130,6 @@ public class CryptoEndpointTest {
                 .statusCode(200)
                 .body("tickers.from", hasItems("BTC", "ETH", "DOGE", "LTC", "XRP"));
     }
-
-     */
 
 
 
