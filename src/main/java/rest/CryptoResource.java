@@ -61,7 +61,8 @@ public class CryptoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/cryptoList")
     public String getCryptoList() throws IOException, ExecutionException, InterruptedException {
-        return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
+        return "[{{name: \"Suck\", exchange: \"on\", price: \"deez\"}}]";
+        //return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
     }
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,6 +78,8 @@ public class CryptoResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/portfolio/{username}")
     public String getPortfolio(@PathParam("username") String username) throws IOException, ExecutionException, InterruptedException {
-        return gson.toJson(FACADE.showPortfolio(username));
+
+        return "{\"userCryptoDTOList\":[{\"userDTO\":{\"userName\":\"String\"},\"cryptoValutaDTO\":{\"id\":\"Haha, held og lykke med at fixe lortet nu :3\"},\"count\": 69}]}";
+        //return gson.toJson(FACADE.showPortfolio(username));
     }
 }
