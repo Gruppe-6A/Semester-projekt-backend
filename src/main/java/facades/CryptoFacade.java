@@ -3,10 +3,7 @@ package facades;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.*;
-import entities.CryptoValuta;
-import entities.Links;
-import entities.User;
-import entities.UserCrypto;
+import entities.*;
 import utils.EMF_Creator;
 import utils.HttpUtils;
 
@@ -17,6 +14,7 @@ import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Link;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -62,21 +60,6 @@ public class CryptoFacade {
         em.getTransaction().commit();
         em.close();
     }
-
-    public List<CryptoValutaDTO> getCryptoByName(String id){
-        EntityManager em = getEntityManager();
-        try {
-            em.getTransaction().begin();
-            TypedQuery query = em.createQuery("Select c from CryptoValuta c where c.id= :id", CryptoValuta.class);
-            query.setParameter("id", id);
-            List<CryptoValuta> cv = query.getResultList();
-            em.getTransaction().commit();
-            return CryptoValutaDTO.getCryptoValutaDTO(cv);
-        } finally {
-            em.close();
-        }
-    }
-
     public void addToPortfolio(UserCryptoList userCryptoList){
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
@@ -108,6 +91,31 @@ public class CryptoFacade {
         }
     }
 
+    public void putPriceIntoDB(List<PriceOverTime> PoT) {
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+
+        for(PriceOverTime PoT1 : PoT){
+            em.persist(PoT1);
+            System.out.println(PoT1);
+        }
+        em.getTransaction().commit();
+        em.close();
+    }
+    public List<PriceOverTime> PoTList(){
+        EntityManager em = getEntityManager();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR)-1);
+
+        TypedQuery query = em.createQuery("select DISTINCT(p.coinName) from PriceOverTime p where p.calendar = :time" , PriceOverTime.class);
+        query.setParameter("time", calendar);
+        System.out.println(query);
+        System.out.println(query.getResultList());
+        return query.getResultList();
+    }
 
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {

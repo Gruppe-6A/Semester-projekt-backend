@@ -8,6 +8,7 @@ import entities.UserCrypto;
 import facades.CryptoFacade;
 import utils.EMF_Creator;
 import utils.HttpUtils;
+import utils.TimedEvent;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
@@ -42,7 +43,6 @@ public class CryptoResource {
         System.out.println(result);
        return result;
     }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("user")
@@ -50,7 +50,6 @@ public class CryptoResource {
     public String getAll() throws IOException, ExecutionException, InterruptedException {
         return gson.toJson(HttpUtils.fetchDataParallel());
     }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 
@@ -65,14 +64,6 @@ public class CryptoResource {
     public String getCryptoList() throws IOException, ExecutionException, InterruptedException {
         return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoFromDB()));
     }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/cryptoList/{id}")
-    public String getCryptoName(@PathParam("id") String id) throws IOException, ExecutionException, InterruptedException {
-        return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoByName(id)));
-    }
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -88,5 +79,14 @@ public class CryptoResource {
     @Path("/portfolio/{username}")
     public String getPortfolio(@PathParam("username") String username) throws IOException, ExecutionException, InterruptedException {
         return gson.toJson(FACADE.showPortfolio(username));
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/start")
+    public String startTimer(){
+
+        TimedEvent timer = new TimedEvent();
+
+        return timer.imnotsure(FACADE);
     }
 }
