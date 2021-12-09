@@ -89,4 +89,10 @@ public class CryptoResource {
 
         return timer.imnotsure(FACADE);
     }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/cryptoList/{id}")
+    public String getCryptoName(@PathParam("id") String id) throws IOException, ExecutionException, InterruptedException {
+        return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoByName(id)));
+    }
 }

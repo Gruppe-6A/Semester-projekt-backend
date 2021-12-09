@@ -116,6 +116,17 @@ public class CryptoFacade {
         System.out.println(query.getResultList());
         return query.getResultList();
     }
+    public List<CryptoValutaDTO> getCryptoByName(String id){
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery query = em.createQuery("Select c from CryptoValuta c where c.id= :id", CryptoValuta.class);
+            query.setParameter("id", id);
+            List<CryptoValuta> cv = query.getResultList();
+            return CryptoValutaDTO.getCryptoValutaDTO(cv);
+        } finally {
+            em.close();
+        }
+    }
 
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
