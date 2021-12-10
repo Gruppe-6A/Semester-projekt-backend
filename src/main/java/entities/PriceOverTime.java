@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Table(name = "price_over_time")
 @Entity
-public class PriceOverTime {
+public class PriceOverTime implements Comparable<PriceOverTime> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -47,5 +47,10 @@ public class PriceOverTime {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(PriceOverTime o) {
+        return this.getPrice().compareTo(o.getPrice());
     }
 }

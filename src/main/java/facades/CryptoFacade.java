@@ -15,6 +15,7 @@ import javax.ws.rs.core.Link;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -94,23 +95,23 @@ public class CryptoFacade {
     public void putPriceIntoDB(List<PriceOverTime> PoT) {
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
+        Collections.sort(PoT);
+        ArrayList<String> list = new ArrayList<>();
 
         for(PriceOverTime PoT1 : PoT){
-            em.persist(PoT1);
-            System.out.println(PoT1);
+            if(!list.contains(PoT1.getCoinName())) {
+                em.persist(PoT1);
+                list.add(PoT1.getCoinName());
+            }
         }
         em.getTransaction().commit();
         em.close();
     }
-    public List<PriceOverTime> PoTList(){
+    public List<PriceOverTime> PoTList(Calendar calendar){
         EntityManager em = getEntityManager();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR)-1);
 
-        TypedQuery query = em.createQuery("select DISTINCT(p.coinName) from PriceOverTime p where p.calendar = :time" , PriceOverTime.class);
+
+        TypedQuery query = em.createQuery("select p from PriceOverTime p where p.calendar = :time" , PriceOverTime.class);
         query.setParameter("time", calendar);
         System.out.println(query);
         System.out.println(query.getResultList());
@@ -126,6 +127,27 @@ public class CryptoFacade {
         } finally {
             em.close();
         }
+    }
+    public List<PoTDTO> changeCalculator(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY)-1);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        List<PriceOverTime> today = PoTList(calendar);
+
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR)-1);
+        List<PriceOverTime>  yesterday = PoTList(calendar);
+        List<PoTDTO> returnPots = new ArrayList<>();
+        for(PriceOverTime potYesterday: yesterday){
+            for(PriceOverTime potToday: today){
+                if(potYesterday.getCoinName().equals(potToday.getCoinName())){
+                    returnPots.add(new PoTDTO(potYesterday.getCoinName(), ((Float.parseFloat(potToday.getPrice())  / Float.parseFloat(potYesterday.getPrice()))-1)*100));
+                }
+            }
+        }
+        System.out.println(returnPots.get(2).getChange());
+        return returnPots;
     }
 
 

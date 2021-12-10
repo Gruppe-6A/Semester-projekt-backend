@@ -13,6 +13,7 @@ import dtos.KrakenDTO;
 import dtos.YobitDTO;
 import facades.CryptoFacade;
 import utils.HttpUtils;
+import utils.TimedEvent;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,29 +22,15 @@ public class Fetcher {
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
         CryptoFacade crypto = CryptoFacade.getCryptoFacade(emf);
-        HttpUtils.fetchcryptos(crypto.getCryptoFromDB());
+       /* TimedEvent timer = new TimedEvent();
+        timer.imnotsure(crypto);
+
+        */
+        crypto.changeCalculator();
 
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-
-        Map <String, Map<String, String>>larshansen = gson.fromJson(HttpUtils.fetchData("https://yobit.net/api/2/btc_usdt/ticker"), Map.class);
-
-        YobitDTO frederikke = null;
-        for(Map tobias : larshansen.values()){
-            String kulmule = gson.toJson(tobias);
-            frederikke = gson.fromJson(kulmule, YobitDTO.class);
-
-        }
-
-        Map <String, Map<String, Map<String, ArrayList<String>>>>karljohan = gson.fromJson(HttpUtils.fetchData("https://api.kraken.com/0/public/Ticker?pair=BTCUSD"), Map.class);
-
-        KrakenDTO pøllerkarl = null;
-        for(Map mogens : karljohan.get("result").values()){
-            String anusmand = gson.toJson(mogens);
-
-            pøllerkarl = gson.fromJson(anusmand, KrakenDTO.class);
-        }
 
     }
 }

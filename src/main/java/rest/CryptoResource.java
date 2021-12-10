@@ -12,6 +12,7 @@ import utils.TimedEvent;
 
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -95,4 +97,13 @@ public class CryptoResource {
     public String getCryptoName(@PathParam("id") String id) throws IOException, ExecutionException, InterruptedException {
         return gson.toJson(HttpUtils.fetchcryptos(FACADE.getCryptoByName(id)));
     }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/topmovers")
+    public String topMovers(){
+
+        return gson.toJson(FACADE.changeCalculator());
+    }
+
+
 }
